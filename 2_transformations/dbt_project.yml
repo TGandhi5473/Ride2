@@ -1,0 +1,47 @@
+name: 'ride_the_trends'
+version: '1.0.0'
+config-version: 2
+
+# This matches the profile name in your profiles.yml (used in GitHub Actions)
+profile: 'ride_the_trends_profile'
+
+# Where dbt looks for specific file types
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# --- 1. Global Variables ---
+vars:
+  # Used for the Confidence Score logic (HML)
+  # Allows you to tweak "Precision" without changing SQL code
+  high_confidence_threshold: 0.8
+  medium_confidence_threshold: 0.5
+
+# --- 2. Model Configurations ---
+models:
+  ride_the_trends:
+    # 1. Staging: Clean & Standardize (View is fine for low-latency updates)
+    staging:
+      +materialized: view
+      +schema: staging
+      +tags: ["hourly"]
+
+    # 2. Intermediate: The "Brain" (Table helps with performance for complex joins)
+    intermediate:
+      +materialized: table
+      +schema: intermediate
+      +tags: ["validation"]
+
+    # 3. Marts: The "Gold" Layer (Incremental for cost-savings on Neon)
+    marts:
+      +materialized: incremental
+      +unique_key: 'prompt_id'
+      +schema: analytics
+      +tags: ["bi_ready"]
