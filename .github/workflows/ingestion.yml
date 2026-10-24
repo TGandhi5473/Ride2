@@ -1,0 +1,61 @@
+name: Ride The Trends Ingestion
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ride-the-trends-ingestion
+  cancel-in-progress: false
+
+jobs:
+  ingest_and_process:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Cache Hugging Face weights
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: ${{ runner.os }}-hf-${{ hashFiles('requirements.txt') }}
+          restore-keys: ${{ runner.os }}-hf-
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ingestion
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          BSKY_HANDLE: ${{ secrets.BSKY_HANDLE }}
+          BSKY_PASSWORD: ${{ secrets.BSKY_PASSWORD }}
+          PYTHONPATH: .
+          PYTHONDONTWRITEBYTECODE: 1
+          HF_HUB_DISABLE_PROGRESS_BARS: 1
+        run: python 1_ingestion/worker.py
+
+      - name: Retrain critic when eligible
+        if: success()
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PYTHONPATH: .
+        run: python scripts/retrain_bert.py
+
+      - name: Report failure
+        if: failure()
+        run: echo "::error::Pipeline failed. Review provider, schema, and database logs above."
