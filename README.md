@@ -2,7 +2,7 @@
 
 Ride-The-Trends turns public YouTube and Bluesky activity into an auditable creative-research workflow. Provider posts are collected into a JSONB Bronze table, deterministic SQL/dbt models identify cross-platform trend signals and produce prompt templates, and a Streamlit app lets a human explore trends, generate optional hook ideas, and record feedback.
 
-**AI is not the trend validator.** Generated copy and the classifier score are creative aids, not verified claims or predictions. Review hooks before use. Not financial advice.
+**AI is not the trend validator.** Generated copy and the classifier score are creative aids, not verified claims or predictions. Review hooks before use. Not an authoratitive source/workflow in progress to test AI's ability to adapt to creative tasks.
 
 ## What it does
 
