@@ -76,3 +76,4 @@ A small classifier head can be fine-tuned from explicit approval/rejection label
 4. Persist workflow metrics beyond Actions logs if long-term operational visibility is needed.
 5. Add authentication before public deployment.
 6. Evaluate critic quality on a held-out labeled dataset before presenting its score as a decision signal.
+7. Adding more scope is discussed in Proposals.md
