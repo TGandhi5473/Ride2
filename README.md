@@ -1,6 +1,5 @@
 # Ride-The-Trends
-
-Ride-The-Trends turns public YouTube and Bluesky activity into an auditable creative-research workflow. Provider posts are collected into a JSONB Bronze table, deterministic SQL/dbt models identify cross-platform trend signals and produce prompt templates, and a Streamlit app lets a human explore trends, generate optional hook ideas, and record feedback.
+Ride-The-Trends is designed to reduce the manual effort involved in identifying emerging social media trends and translating them into actionable creative research. By consolidating public signals from YouTube and Bluesky, applying consistent data-validation rules, and generating reviewable summaries and creative suggestions, the workflow helps marketing teams prioritize trends for further exploration. Its human-feedback mechanism provides a foundation for evaluating output usefulness and refining future recommendations; time savings and improvements in decision quality remain to be measured.
 
 **AI is not the trend validator.** Generated copy and the classifier score are creative aids, not verified claims or predictions. Review hooks before use. Not an authoratitive source/workflow in progress to test AI's ability to adapt to creative tasks.
 
@@ -14,6 +13,17 @@ Ride-The-Trends turns public YouTube and Bluesky activity into an auditable crea
 - Optionally generates hooks through local Ollama, with an optional OpenAI cloud fallback; scores candidates with a cached DistilBERT critic.
 - Records explicit human approve/reject feedback for later critic training.
 
+## Proposed Business KPIs
+
+The architecture is designed to support marketing teams in identifying emerging social media trends and translating them into actionable creative research. The following KPIs could be used to evaluate its business relevance in a pilot deployment:
+
+| KPI | Definition | Evaluation Method |
+|---|---|---|
+| **Research-to-Brief Time** | Time required to turn a surfaced trend into a reviewable creative brief. | Compare median completion time with and without the assisted workflow. |
+| **Trend Exploration Acceptance Rate** | Percentage of surfaced trends that analysts select for further investigation. | Track human selections relative to the total number of trends reviewed. |
+| **Summary Usefulness Rate** | Percentage of AI-generated trend summaries that reviewers consider useful for creative research. | Collect reviewer feedback using a consistent usefulness rating or binary approval. |
+
+**Evaluation Objective:** Determine whether the architecture reduces manual research effort, surfaces relevant trends, and provides useful context for human decision-making. These KPIs are proposed evaluation criteria; business impact has not yet been measured in a production environment.
 ## Architecture and repository map
 
 ```text
